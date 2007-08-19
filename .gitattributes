@@ -1,0 +1,15 @@
+#https://github.com/github-linguist/linguist/blob/main/docs/overrides.md
+
+*.html linguist-documentation
+*.xml linguist-documentation
+*.css linguist-documentation
+text.html.handlebars linguist-documentation
+*.handlebars linguist-documentation
+*.hbs linguist-documentation
+
+*.c linguist-detectable
+*.cpp linguist-detectable
+*.py linguist-detectable
+*.js linguist-detectable
+*.java linguist-detectable
+
