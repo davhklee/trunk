@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity {
         totalAmount = findViewById(R.id.tvTotalAmount);
 
         tipSeekBar.setProgress(INIT_TIP_PERCENT);
-        tipPercent.setText(INIT_TIP_PERCENT);
+        tipPercent.setText(String.valueOf(INIT_TIP_PERCENT));
 
         tipSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tipPercent.setText(progress);
+                tipPercent.setText(String.valueOf(progress));
                 computeTipAndTotal();
             }
             @Override
