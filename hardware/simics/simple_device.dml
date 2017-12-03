@@ -1,0 +1,27 @@
+dml 1.4;
+
+device simple_device;
+
+param desc = "sample DML device";
+
+param documentation = "This is a very simple device.";
+
+import "utility.dml"
+
+session uint32 var = 42;
+
+bank regs {
+    register counter size 4 @ 0x0000 {
+        field status @ [31:0] is (read, write) {
+            method read() -> (uint64) {
+                log info: "read from counter";
+                return var;
+            }
+            method write(uint64 val) {
+                log info: "write to counter";
+                var = val;
+            }
+        }
+    }
+}
+
