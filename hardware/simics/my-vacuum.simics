@@ -1,0 +1,3 @@
+run-command-file "%script%/vacuum.simics"
+@SIM_create_object("simple_device", "dev1")
+phys_mem.add-map dev1.bank.regs 0x1000 0x100
