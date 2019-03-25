@@ -1,0 +1,302 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DragononGo!</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .cell {
+            width: 30px;
+        }
+        #label_question {
+            height: 33px;
+            padding: 2px 10px 2px 10px;
+        }
+        body {
+            background-color: rgb(0, 0, 0);
+            color: black;
+        }
+        #winModal,
+        #loseModal {
+            color: black;
+        }
+    </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script>
+        var FPS = 30;
+        var bottomline = -500;
+        var canvas = null;
+        var canvas_width = window.innerWidth;
+        var canvas_height = window.innerHeight - 33;
+        var corr_ans = 0;
+        var wrong_ans = 3;
+        var quiz = [{question: "Which number should come next in this series? 25, 24, 22, 19, 15", ans: 10}, 
+                    {question: "Which number should come next in this series? 3, 5, 8, 13, 21", ans: 34}, 
+                    {question: "Which number should replace the question mark? <table cellspacing='1' cellpadding='1' border='1'><tr><td class='cell'>17</td><td class='cell'>8</td><td class='cell'>5</td><td class='cell'>5</td></tr><tr><td class='cell'>13</td><td class='cell'>7</td><td class='cell'>5</td><td class='cell'>4</td></tr><tr><td class='cell'>6</td><td class='cell'>12</td><td class='cell'>6</td><td class='cell'>3</td></tr><tr><td class='cell'>10</td><td class='cell'>6</td><td class='cell'>4</td><td class='cell'>?</td></tr></table>" , ans: 4}, 
+                    {question: "The teacher bought a sticker for each of her students.  There are 30 students in her class.  If she gave 15 away, how many does she have left?" , ans: 15}, 
+                    {question: "Jose was counting by 5's.  He stopped at 85.  What number would come next?" , ans: 90}, 
+                    {question: "Mrs. Smith's third graders were learning patterns on a number chart.  They were counting 74, 78, 82, 86.  What were they skipping by and which number would come next in the sequence?" , ans: 90}, 
+                    {question: "Mr. Johnson bought 376 pencils. He lost 39 of them. How many pencils does he have left?" , ans: 177}, 
+                    {question: "Daniel is ordering breakfast in a restaurant. He can have scrambled or hard boiled eggs. On the side, he can choose to have hashbrowns, a muffin, toast, or fruit. How many different combinations can Daniel order for breakfast?" , ans: 8}, 
+                    {question: "Jimmy is going to buy a new bike. He can choose from a 10 speed bike, motor bike, or a tandem bike. His color choices are black, purple, blue, and silver. How many different combinations does Jimmy have to choose from?" , ans: 12}, 
+                    {question: "An office building is 3 stories tall. There are 20 offices on the first floor. There are 6 more offices on the second floor than on the first floor, and there are 2 more offices on the third floor than on the second floor. How many offices are there in all?" , ans: 74}, 
+                    {question: "Maggie made 3 stacks of wooden blocks. The first stack was 12 blocks tall. The second stack was 3 blocks taller than the first. The third stack was 7 blocks shorter than the second stack. How many blocks did Maggie use in all?" , ans: 35}, 
+		    ];
+        var refresh_button = "<button onclick='location.reload()' id='button_refresh' type='button' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-repeat'></span> Replay</button>";
+
+        var player = {
+            x: canvas_width / 50,
+            y: canvas_height * 0.5,
+            image: new Image(),
+            draw: function () {
+                canvas.drawImage(this.image, this.x, this.y);
+            }
+        };
+
+        var enemy = {
+            x: canvas_width,
+            y: canvas_height,
+            image: null,
+            width: 64,
+            height: 32,
+            bgColor: "white",
+            lineWidth: 6,
+            lineColor: "blue",
+            value: 0.0,
+            draw: function () {
+
+		    /*
+                canvas.fillStyle = this.bgColor;
+                canvas.fillRect(this.x, this.y, this.width, this.height);
+
+                canvas.beginPath();
+                canvas.strokeStyle = this.lineColor;
+                canvas.lineWidth = this.lineWidth;
+                canvas.rect(this.x, this.y, this.width, this.height);
+                canvas.stroke();
+
+                canvas.fillStyle = this.lineColor;
+                canvas.font = "15px Verdana";
+                canvas.fillText("" + this.value, this.x + this.lineWidth, this.y + this.height / 2);
+		*/
+
+		try {
+		if (this.image == null) {
+		this.image = new Image();
+		this.image.src = "enemy.gif";
+		}
+                canvas.drawImage(this.image, this.x, this.y);
+		} catch {}
+            }
+        }
+
+        var rocket = {
+            x: canvas_width,
+            y: bottomline,
+            image: new Image(),
+            draw: function () {
+                canvas.drawImage(this.image, this.x, this.y);
+            }
+        }
+
+        var enemies = [];
+
+        var backgnd = new Image();
+
+        $(document).ready(function () {
+
+            init();
+
+        }); // ready
+
+        function init() {
+
+            $("#label_question").html(mylives() + "" + quiz[corr_ans].question);
+
+            backgnd.src = "bluesky.jpg";
+            player.image.src = "playerup.gif";
+            rocket.image.src = "rocket.gif";
+
+            document.addEventListener("keydown", keydown, false);
+            document.addEventListener("keyup", keyup, false);
+
+            var canvas_element = $("<canvas width='" + canvas_width + "' height='" + canvas_height + "'></canvas>");
+            canvas = canvas_element.get(0).getContext("2d");
+            canvas_element.appendTo("body");
+
+            for (var i = 0; i < quiz.length; i++) {
+                enemies[i] = JSON.parse(JSON.stringify(enemy));
+                enemies[i].x = Math.random() * canvas_width;
+                enemies[i].y = Math.random() * canvas_height * 0.25;
+                enemies[i].draw = enemy.draw;
+                enemies[i].value = quiz[i].ans;
+            }
+
+            setInterval(function () {
+                update();
+                draw();
+            }, 1000 / FPS);
+
+        }
+
+        function mylives() {
+            var str = "";
+            for (var i = 0; i < wrong_ans; i++) {
+                str += "<img src='live.gif'>";
+            }
+            return str + " Question: ";
+        }
+
+        function keyup(e) {
+            switch (e.keyCode) {
+            case 32:
+		    if (rocket.x >= canvas_width) {
+                    player.image.src = "playerup.gif";
+                    rocket.x = player.x;
+                    rocket.y = (player.y + player.image.height/2) - rocket.image.height / 2;
+                }
+                break;
+            }
+            return (true);
+        }
+
+        function keydown(e) {
+            if (!e) e = event;
+            switch (e.keyCode) {
+            case 37: //left
+                if (player.x > 0) {
+                    player.x -= 50;
+                }
+                break;
+            case 39: //right
+                if (player.x < canvas_width) {
+                    player.x += 50;
+                }
+                break;
+            case 38: //up
+		if (player.y > 0) {
+                    player.y -= 50;
+                }
+                break;
+            case 40: //down
+                if (player.y < (canvas_height - player.image.height)) {
+                    player.y += 50;
+                }
+                break;
+            case 32: //spacebar
+                if (rocket.y <= bottomline) {
+                    player.image.src = "playerdown.gif";
+                }
+                break;
+            }
+            return (true);
+        }
+
+        function update() {
+            for (var i = 0; i < enemies.length; i++) {
+                enemies[i].y += Math.random() * 5;
+                enemies[i].y %= canvas_height;
+                enemies[i].x += (Math.random() - 1) * 10;
+                if (enemies[i].x < 0) {
+                    enemies[i].x = canvas_width;
+                }
+            }
+            if (rocket.x < canvas_width) {
+                rocket.x += 40;
+            }
+
+            for (var i = 0; i < enemies.length; i++) {
+                if (enemies[i].x < (rocket.x + rocket.image.width) &&
+                    (enemies[i].x + enemies[i].width) > rocket.x &&
+                    enemies[i].y < (rocket.y + rocket.image.height) &&
+                    (enemies[i].y + enemies[i].height) > rocket.y) {
+                    if (enemies[i].value == quiz[corr_ans].ans) { // right answer
+                        enemies.splice(i, 1);
+                        corr_ans++;
+                        if (corr_ans >= quiz.length) {
+                            $("#winModal").modal();
+                            $("#label_question").html(refresh_button);
+                        } else {
+                            $("#label_question").html(mylives() + "" + quiz[corr_ans].question);
+                        }
+                        rocket.y = bottomline;
+                        break;
+                    } else { // wrong answer
+                        wrong_ans--;
+                        $("#label_question").html(mylives() + "" + quiz[corr_ans].question);
+                        if (wrong_ans <= 0) {
+                            $("#loseModal").modal();
+                            $("#label_question").html(refresh_button);
+                            enemies = [];
+                        }
+                        rocket.y = bottomline;
+                    }
+                } else {
+                    // no collision
+                }
+
+            }
+        }
+
+        function draw() {
+
+            canvas.clearRect(0, 0, canvas_width, canvas_height); // cls
+
+            canvas.drawImage(backgnd, 0, 0);
+
+            rocket.draw();
+
+            for (var i = 0; i < enemies.length; i++) {
+                enemies[i].draw();
+            }
+
+            player.draw();
+
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="label_question"></div>
+
+    <div class="modal fade" id="winModal" tabindex="-1" role="dialog" aria-labelledby="winModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Congratulations!</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>You win!</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loseModal" tabindex="-1" role="dialog" aria-labelledby="loseModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Try again!</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>You lose!</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
