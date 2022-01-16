@@ -1,0 +1,39 @@
+{
+  "name": "deploysample",
+  "version": "1.0.0",
+  "description": "basic authentication",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "IP=0.0.0.0 PORT=3030 mocha --timeout 5000 tests/*_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/belltek/deploysample.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belltek/deploysample/issues"
+  },
+  "homepage": "https://github.com/belltek/deploysample#readme",
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "cookie-parser": "^1.4.1",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*",
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5"
+  }
+}
