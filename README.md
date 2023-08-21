@@ -154,7 +154,7 @@
 
 <a href="https://www.credly.com/badges/2e614434-f20b-4263-ad7a-2d4972e304c7/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-yellow-belt-hardware.png"></a>
 <a href="https://www.credly.com/badges/aac09cc8-4403-46e4-b12a-ea2a60041e5a/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-yellow-belt-software.png"></a>
-<a href="https://www.credly.com/badges/aac09cc8-4403-46e4-b12a-ea2a60041e5a/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-white-belt.png"></a>
+<img src="https://davhklee.github.io/trunk/product-assurance-and-security-white-belt.png">
 
 <div align="center">
   <img height="150" src="https://camo.githubusercontent.com/62da68eb62b1e5f175f7d1f0191dd89a653d7908feb22d37d4a0ab07365d6791/68747470733a2f2f6d656469612e67697068792e636f6d2f6d656469612f4d3967624264396e6244724f5475314d71782f67697068792e676966"  />
