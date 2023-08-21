@@ -148,11 +148,11 @@
 <a href="https://www.credly.com/badges/d7f21af8-e314-416f-948f-1c3e9b7f27ba/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-hardware-manager-and-program-manager.png"></a>
 <a href="https://www.credly.com/badges/8dba4626-40b1-4c87-8941-09c11ee6eea2/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-software-validator.png"></a>
 
-<a href="https://www.credly.com/badges/1148a3bb-8098-474a-b139-daf236462fd5/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-.png"></a>
-<a href="https://www.credly.com/badges/c8152495-5555-43e4-8d5f-ed187fe37b1c/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-.png"></a>
-<a href="https://www.credly.com/badges/9efacb7d-4366-42a5-beaa-d57c7ed3f8da/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-.png"></a>
+<a href="https://www.credly.com/badges/1148a3bb-8098-474a-b139-daf236462fd5/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-software-architect.png"></a>
+<a href="https://www.credly.com/badges/c8152495-5555-43e4-8d5f-ed187fe37b1c/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-hardware-validator.png"></a>
+<a href="https://www.credly.com/badges/9efacb7d-4366-42a5-beaa-d57c7ed3f8da/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-hardware-architect-designer.png"></a>
 
-<a href="https://www.credly.com/badges/77a482ce-b1b4-44c5-8501-7dc10826a2b9/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-.png"></a>
+<a href="https://www.credly.com/badges/77a482ce-b1b4-44c5-8501-7dc10826a2b9/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-green-belt-software-developer.png"></a>
 <a href="https://www.credly.com/badges/2e614434-f20b-4263-ad7a-2d4972e304c7/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-yellow-belt-hardware.png"></a>
 <a href="https://www.credly.com/badges/aac09cc8-4403-46e4-b12a-ea2a60041e5a/public_url"><img src="https://davhklee.github.io/trunk/product-assurance-and-security-yellow-belt-software.png"></a>
 
