@@ -140,7 +140,7 @@
 
 ###
 
-<h3 align="left">🔥   Click My Credly Badge</h3>
+<h3 align="left">🔥   My Badge</h3>
 
 ###
 
