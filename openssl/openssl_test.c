@@ -268,6 +268,8 @@ result_t pka_verify(bignum_t *pubx,
 
 int main(void)
 {
+    pka_init();
+    pka_uninit();
     return(0);
 }
 
