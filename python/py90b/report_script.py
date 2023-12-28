@@ -116,12 +116,12 @@ def process_puf(infiles):
             x = x.strip()
             if count % 32 == 0:
                 num = num + 1
-                fp = open(str(fcount) + "_" + str(num) + ".bin","wb")
+                fp = open("{}_{}.bin".format(fcount,num),"wb")
             fp.write(struct.pack("<I", int(x, 16)))
             if count % 32 == 31:
                 fp.close()
                 if num > 8:
-                    ber = comparefile(str(fcount) + "_" + str(num) + ".bin", str(fcount) + "_" + str(num - 8) + ".bin")/1024*100
+                    ber = comparefile("{}_{}.bin".format(fcount,num), "{}_{}.bin".format(fcount,num-8))/1024*100
                     print("Array" + str(num-8), ber, "%")
             count = count + 1
         fcount += 1
@@ -568,16 +568,20 @@ def unit_test():
 infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt']
 
 process_puf(infiles)
-exit(0)
-for x in range(16):
-    k1 = count1("output" + str(x + 1) + ".bin")
-    k11 = count11("output" + str(x + 1) + ".bin")
-    s = scc(1024, k1, k11)
-    print("bias:", k1, "count11:", k11, "scc:", s)
 
-for x in range(16):
-    a = bit_array("output" + str(x + 1) + ".bin")
-    iid_test(a)
+fcount = 0
+for y in infiles:
+    for x in range(16):
+        fn = "{}_{}.bin".format(fcount,x+1)
+        k1 = count1(fn)
+        k11 = count11(fn)
+        s = scc(1024, k1, k11)
+        print("bias:", k1, "count11:", k11, "scc:", s)
+        assert(abs(s) < 0.4)
+
+        a = bit_array(fn)
+        iid_test(a)
+    fcount += 1
 
 unit_test()
 
