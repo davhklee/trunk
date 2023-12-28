@@ -101,27 +101,30 @@ def comparefile(f1, f2):
 		sum += countbit(flipped)
 	return sum
 
-def process_puf(fn):
-    fp = open(fn,"r")
-    data = fp.read()
-    fp.close()
-    data = data.strip()
-    l = data.split(" ")
-    assert(len(l) == 512)
-    count = 0
-    num = 0
-    for x in l:
-        x = x.strip()
-        if count % 32 == 0:
-            num = num + 1
-            fp = open("output" + str(num) + ".bin","wb")
-        fp.write(struct.pack("<I", int(x, 16)))
-        if count % 32 == 31:
-            fp.close()
-            if num > 8:
-                ber = comparefile("output" + str(num) + ".bin", "output" + str(num - 8) + ".bin")/1024*100
-                print("Array" + str(num-8), ber, "%")
-        count = count + 1
+def process_puf(infiles):
+    fcount = 0
+    for fn in infiles:
+        fp = open(fn,"r")
+        data = fp.read()
+        fp.close()
+        data = data.strip()
+        l = data.split(" ")
+        assert(len(l) == 512)
+        count = 0
+        num = 0
+        for x in l:
+            x = x.strip()
+            if count % 32 == 0:
+                num = num + 1
+                fp = open(str(fcount) + "_" + str(num) + ".bin","wb")
+            fp.write(struct.pack("<I", int(x, 16)))
+            if count % 32 == 31:
+                fp.close()
+                if num > 8:
+                    ber = comparefile(str(fcount) + "_" + str(num) + ".bin", str(fcount) + "_" + str(num - 8) + ".bin")/1024*100
+                    print("Array" + str(num-8), ber, "%")
+            count = count + 1
+        fcount += 1
 
 def scc(n, k1, k11):
     threshold = 0.4
@@ -562,8 +565,10 @@ def unit_test():
 
 #plot_scc()
 
-process_puf(sys.argv[1])
+infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt']
 
+process_puf(infiles)
+exit(0)
 for x in range(16):
     k1 = count1("output" + str(x + 1) + ".bin")
     k11 = count11("output" + str(x + 1) + ".bin")
