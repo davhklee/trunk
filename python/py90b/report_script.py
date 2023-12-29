@@ -639,7 +639,7 @@ def perm_test(func, a, xform = 0):
 
 #plot_scc()
 
-infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf78_cold_hot.txt']
+infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf78_cold_hot.txt', 'puf90.txt']
 
 process_puf(infiles)
 
