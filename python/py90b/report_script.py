@@ -301,7 +301,7 @@ def avg_col(a):
 def max_col(a):
     return max(find_col(a))
 
-def period_test(a, p):
+def period_test(a, p = [1, 2, 8, 16, 32]):
     ret = []
     for q in p:
         T = 0
@@ -312,7 +312,7 @@ def period_test(a, p):
         ret.append(T)
     return ret
 
-def covar_test(a, p):
+def covar_test(a, p = [1, 2, 8, 16, 32]):
     ret = []
     for q in p:
         T = 0
@@ -331,7 +331,7 @@ def compress_test(a):
     ss = bz2.compress(ss)
     return len(ss)
 
-def chisq_independ(a, isbin):
+def chisq_independ(a, isbin = True):
     assert(isbin)
 
     p0 = 0
@@ -372,11 +372,11 @@ def chisq_independ(a, isbin):
         T += pow(occ[i] - e, 2) / e
 
     df = pow(2, m) - 2
-    print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
+    #print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
 
     return(T)
 
-def chisq_goodness(a, isbin):
+def chisq_goodness(a, isbin = True):
     assert(isbin)
 
     sublength = int(len(a) / 10)
@@ -400,11 +400,11 @@ def chisq_goodness(a, isbin):
         T += (pow(o0 - e0, 2) / e0) + (pow(o1 - e1, 2) / e1)
 
     df = 9
-    print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
+    #print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
 
     return(T)
 
-def chisq_LRS(a, isbin):
+def chisq_LRS(a, isbin = True):
     assert(isbin)
 
     k = 2
@@ -426,7 +426,7 @@ def chisq_LRS(a, isbin):
     p_colPower = pow(p_col, W)
     pr = (1 - pow(1 - p_colPower, N))
 
-    print("W:", W, "err:", 0.001)
+    #print("W:", W, "err:", 0.001)
 
     return(pr)
 
@@ -523,6 +523,7 @@ def estimator_markov(a, isbin = True):
     return mine
 
 def iid_test(a):
+    print("===IID Test===")
     print("excursion test:", excur(a))
     print("num directional run test:", num_direct_run(alt_seq1(conv1(a))))
     print("len directional run test:", len_direct_run(alt_seq1(conv1(a))))
@@ -531,41 +532,114 @@ def iid_test(a):
     print("len directional run test2:", len_direct_run(alt_seq2(a, 0.5)))
     print("average collision test:", avg_col(conv2(a)))
     print("max collision test:", max_col(conv2(a)))
-    print("periodic test (1, 2, 8, 16, 32):", period_test(conv1(a), [1, 2, 8, 16, 32]))
-    print("covar test (1, 2, 8, 16, 32):", covar_test(conv1(a), [1, 2, 8, 16, 32]))
+    print("periodic test (1, 2, 8, 16, 32):", period_test(conv1(a)))
+    print("covar test (1, 2, 8, 16, 32):", covar_test(conv1(a)))
     print("compress test:", compress_test(a))
-    print("chi square independ test:", chisq_independ(a, True))
-    print("chi square goodness test:", chisq_goodness(a, True))
-    print("chi square LRS test:", chisq_LRS(a, True))
+    print("chi square independ test:", chisq_independ(a))
+    print("chi square goodness test:", chisq_goodness(a))
+    print("chi square LRS test:", chisq_LRS(a))
     print("estimator common value:", estimator_common_value(a))
     print("estimator collision:", estimator_collision(a))
     print("estimator markov:", estimator_markov(a))
 
 def unit_test():
     print("===Unit Test===")
-    print("excursion test:", excur([2, 15, 4, 10, 9]))
-    print("conv1:", conv1([1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,0,0,1,1]))
-    print("conv2:", conv2([1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,0,0,1,1]))
-    print("alt_seq1:", alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4]))
-    print("num directional run test:", num_direct_run(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4])))
-    print("len directional run test:", len_direct_run(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4])))
-    print("num increase and decrease test:", num_incr_decr(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4])))
-    print("alt_seq2:", alt_seq2([5, 15, 12, 1, 13, 9, 4]))
-    print("num directional run test2:", num_direct_run(alt_seq2([5, 15, 12, 1, 13, 9, 4])))
-    print("len directional run test2:", len_direct_run(alt_seq2([5, 15, 12, 1, 13, 9, 4])))
-    print("average collision test:", avg_col([2, 1, 1, 2, 0, 1, 0, 1, 1, 2]))
-    print("max collision test:", max_col([2, 1, 1, 2, 0, 1, 0, 1, 1, 2]))
-    print("periodic test (2):", period_test([2, 1, 2, 1, 0, 1, 0, 1, 1, 2], [2]))
-    print("covar test (2):", covar_test([5, 2, 6, 10, 12, 3, 1], [2]))
-    print("compress test:", compress_test([144, 21, 139, 0, 0, 15]))
-    print("estimator common value:", estimator_common_value([0, 1, 1, 2, 0, 1, 2, 2, 0, 1, 0, 1, 1, 0, 2, 2, 1, 0, 2, 1]))
-    print("estimator collision:", estimator_collision([1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0]))
-    print("estimator markov:", estimator_markov([1, 0, 0, 0, 1, 1, 1, 0, 0,
-1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0]))
+    val = conv1([1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,0,0,1,1])
+    print("conv1:", val)
+    assert(val == [4, 6, 2])
+    val = conv2([1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,0,0,1,1])
+    print("conv2:", val)
+    assert(val == [142, 219, 48])
+    val = alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4])
+    print("alt_seq1:", val)
+    assert(val == [1, 1, 1, 1, 1, 1, -1, -1, 1, 1])
+    val = alt_seq2([5, 15, 12, 1, 13, 9, 4])
+    print("alt_seq2:", val)
+    assert(val == [-1, 1, 1, -1, 1, 1, -1])
+    val = excur([2, 15, 4, 10, 9])
+    print("excursion test:", val)
+    assert(val == 6)
+    val = num_direct_run(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4]))
+    print("num directional run test:", val)
+    assert(val == 3)
+    val = len_direct_run(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4]))
+    print("len directional run test:", val)
+    assert(val == 6)
+    val = num_incr_decr(alt_seq1([2, 2, 2, 5, 7, 7, 9, 3, 1, 4, 4]))
+    print("num increase and decrease test:", val)
+    assert(val == 8)
+    val = num_direct_run(alt_seq2([5, 15, 12, 1, 13, 9, 4]))
+    print("num directional run test2:", val)
+    assert(val == 5)
+    val = len_direct_run(alt_seq2([5, 15, 12, 1, 13, 9, 4]))
+    print("len directional run test2:", val)
+    assert(val == 2)
+    val = avg_col([2, 1, 1, 2, 0, 1, 0, 1, 1, 2])
+    print("average collision test:", val)
+    assert(val == 3)
+    val = max_col([2, 1, 1, 2, 0, 1, 0, 1, 1, 2])
+    print("max collision test:", val)
+    assert(val == 4)
+    val = period_test([2, 1, 2, 1, 0, 1, 0, 1, 1, 2], [2])
+    print("periodic test (2):", val)
+    assert(val == [5])
+    val = covar_test([5, 2, 6, 10, 12, 3, 1], [2])
+    print("covar test (2):", val)
+    assert(val == [164])
+    val = compress_test([144, 21, 139, 0, 0, 15])
+    print("compress test:", val)
+    assert(val == 49)
+    val = estimator_common_value([0, 1, 1, 2, 0, 1, 2, 2, 0, 1, 0, 1, 1, 0, 2, 2, 1, 0, 2, 1])
+    print("estimator common value:", val)
+    val = estimator_collision([1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0])
+    print("estimator collision:", val)
+    val = estimator_markov([1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0])
+    print("estimator markov:", val)
+
+def perm_test(func, a, xform = 0):
+    n = 10000
+    c0 = 1
+    c1 = 2
+    if xform == 1:
+        t = func(alt_seq1(conv1(a)))
+    elif xform == 2:
+        t = func(alt_seq2(a, 0.5))
+    elif xform == 3:
+        t = func(conv2(a))
+    elif xform == 4:
+        t = func(conv1(a))
+    else:
+        t = func(a)
+    for i in range(n):
+        b = a.copy()
+        for j in range(len(b), 0, -1):
+            r = random.randint(1, j)
+            tmp = b[j - 1]
+            b[j - 1] = b[r - 1]
+            b[r - 1] = tmp
+        if xform == 1:
+            tp = func(alt_seq1(conv1(b)))
+        elif xform == 2:
+            tp = func(alt_seq2(b, 0.5))
+        elif xform == 3:
+            tp = func(conv2(b))
+        elif xform == 4:
+            tp = func(conv1(b))
+        else:
+            tp = func(b)
+        if t > tp:
+            c0 += 1
+        elif t == tp:
+            c1 += 1
+    result = [c0 + c1, c0]
+    print(result)
+    assert((c0 + c1) > 5)
+    assert(c0 < 9995)
+    return result
 
 #plot_scc()
 
-infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt']
+infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf78_cold_hot.txt']
 
 process_puf(infiles)
 
@@ -581,6 +655,24 @@ for y in infiles:
 
         a = bit_array(fn)
         iid_test(a)
+
+        continue
+        #fisher-yates shuffle
+        perm_test(excur, a)
+        perm_test(num_direct_run, a, 1)
+        perm_test(len_direct_run, a, 1)
+        perm_test(num_incr_decr, a, 1)
+        perm_test(num_direct_run, a, 2)
+        perm_test(len_direct_run, a, 2)
+        perm_test(avg_col, a, 3)
+        perm_test(max_col, a, 3)
+        perm_test(period_test, a, 4)
+        perm_test(covar_test, a, 4)
+        perm_test(compress_test, a)
+        perm_test(chisq_independ, a)
+        perm_test(chisq_goodness, a)
+        perm_test(chisq_LRS, a)
+
     fcount += 1
 
 unit_test()
