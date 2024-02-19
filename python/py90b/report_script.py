@@ -9,6 +9,7 @@ import random
 import math
 import statistics
 import bz2
+import seaborn as sns
 
 cvalue = {}
 cvalue[ 2 ] = 10.8276
@@ -522,25 +523,60 @@ def estimator_markov(a, isbin = True):
 
     return mine
 
+list_global = [[] for x in range(17)]
+
 def iid_test(a):
     print("===IID Test===")
-    print("excursion test:", excur(a))
-    print("num directional run test:", num_direct_run(alt_seq1(conv1(a))))
-    print("len directional run test:", len_direct_run(alt_seq1(conv1(a))))
-    print("num increase and decrease test:", num_incr_decr(alt_seq1(conv1(a))))
-    print("num directional run test2:", num_direct_run(alt_seq2(a, 0.5)))
-    print("len directional run test2:", len_direct_run(alt_seq2(a, 0.5)))
-    print("average collision test:", avg_col(conv2(a)))
-    print("max collision test:", max_col(conv2(a)))
-    print("periodic test (1, 2, 8, 16, 32):", period_test(conv1(a)))
-    print("covar test (1, 2, 8, 16, 32):", covar_test(conv1(a)))
-    print("compress test:", compress_test(a))
-    print("chi square independ test:", chisq_independ(a))
-    print("chi square goodness test:", chisq_goodness(a))
-    print("chi square LRS test:", chisq_LRS(a))
-    print("estimator common value:", estimator_common_value(a))
-    print("estimator collision:", estimator_collision(a))
-    print("estimator markov:", estimator_markov(a))
+    list_global[0].append(excur(a))
+    print("excursion test:", list_global[0][-1])
+
+    list_global[1].append(num_direct_run(alt_seq1(conv1(a))))
+    print("num directional run test:", list_global[1][-1])
+
+    list_global[2].append(len_direct_run(alt_seq1(conv1(a))))
+    print("len directional run test:", list_global[2][-1])
+
+    list_global[3].append(num_incr_decr(alt_seq1(conv1(a))))
+    print("num increase and decrease test:", list_global[3][-1])
+
+    list_global[4].append(num_direct_run(alt_seq2(a, 0.5)))
+    print("num directional run test2:", list_global[4][-1])
+    
+    list_global[5].append(len_direct_run(alt_seq2(a, 0.5)))
+    print("len directional run test2:", list_global[5][-1])
+
+    list_global[6].append(avg_col(conv2(a)))
+    print("average collision test:", list_global[6][-1])
+
+    list_global[7].append(max_col(conv2(a)))
+    print("max collision test:", list_global[7][-1])
+
+    list_global[8].append(period_test(conv1(a)))
+    print("periodic test (1, 2, 8, 16, 32):", list_global[8][-1])
+
+    list_global[9].append(covar_test(conv1(a)))
+    print("covar test (1, 2, 8, 16, 32):", list_global[9][-1])
+
+    list_global[10].append(compress_test(a))
+    print("compress test:", list_global[10][-1])
+
+    list_global[11].append(chisq_independ(a))
+    print("chi square independ test:", list_global[11][-1])
+
+    list_global[12].append(chisq_goodness(a))
+    print("chi square goodness test:", list_global[12][-1])
+
+    list_global[13].append(chisq_LRS(a))
+    print("chi square LRS test:", list_global[13][-1])
+
+    list_global[14].append(estimator_common_value(a))
+    print("estimator common value:", list_global[14][-1])
+
+    list_global[15].append(estimator_collision(a))
+    print("estimator collision:", list_global[15][-1])
+
+    list_global[16].append(estimator_markov(a))
+    print("estimator markov:", list_global[16][-1])
 
 def unit_test():
     print("===Unit Test===")
@@ -676,4 +712,32 @@ for y in infiles:
     fcount += 1
 
 unit_test()
+
+plot_titles = ['Excursion',
+        'Num Dir Run',
+        'Length Dir Run',
+        'Num Incr/Decr',
+        'Num Dir Run (Med)',
+        'Length Dir Run (Med)',
+        'Avg Collision',
+        'Max Collision',
+        'Periodic',
+        'Covariance',
+        'Compression',
+        'Chi Square Independ',
+        'Chi Square Goodness',
+        'Chi Square LRS',
+        'Common Val Est',
+        'Collision Est',
+        'Markov Est']
+plotcount = 0
+for x in range(11):
+    if x+1 in [1,2,3,4,5,6,7,8,11]:
+        ax = plt.subplot(3,3,plotcount+1)
+        ax.title.set_text(plot_titles[x])
+        sns.kdeplot(list_global[x], color='Orange')
+        ax.twinx().hist(list_global[x], color='Blue')
+        plotcount += 1
+plt.legend('', frameon=False)
+plt.show()
 
