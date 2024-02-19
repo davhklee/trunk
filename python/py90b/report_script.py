@@ -10,6 +10,7 @@ import math
 import statistics
 import bz2
 import seaborn as sns
+import pandas as pd
 
 cvalue = {}
 cvalue[ 2 ] = 10.8276
@@ -102,6 +103,8 @@ def comparefile(f1, f2):
 		sum += countbit(flipped)
 	return sum
 
+ber_global = []
+
 def process_puf(infiles):
     fcount = 0
     for fn in infiles:
@@ -122,7 +125,9 @@ def process_puf(infiles):
             if count % 32 == 31:
                 fp.close()
                 if num > 8:
-                    ber = comparefile("{}_{}.bin".format(fcount,num), "{}_{}.bin".format(fcount,num-8))/1024*100
+                    bindiff = comparefile("{}_{}.bin".format(fcount,num), "{}_{}.bin".format(fcount,num-8))
+                    ber_global.append(bindiff)
+                    ber = bindiff/1024*100
                     print("Array" + str(num-8), ber, "%")
             count = count + 1
         fcount += 1
@@ -523,60 +528,60 @@ def estimator_markov(a, isbin = True):
 
     return mine
 
-list_global = [[] for x in range(17)]
+iid_global = [[] for x in range(17)]
 
 def iid_test(a):
     print("===IID Test===")
-    list_global[0].append(excur(a))
-    print("excursion test:", list_global[0][-1])
+    iid_global[0].append(excur(a))
+    print("excursion test:", iid_global[0][-1])
 
-    list_global[1].append(num_direct_run(alt_seq1(conv1(a))))
-    print("num directional run test:", list_global[1][-1])
+    iid_global[1].append(num_direct_run(alt_seq1(conv1(a))))
+    print("num directional run test:", iid_global[1][-1])
 
-    list_global[2].append(len_direct_run(alt_seq1(conv1(a))))
-    print("len directional run test:", list_global[2][-1])
+    iid_global[2].append(len_direct_run(alt_seq1(conv1(a))))
+    print("len directional run test:", iid_global[2][-1])
 
-    list_global[3].append(num_incr_decr(alt_seq1(conv1(a))))
-    print("num increase and decrease test:", list_global[3][-1])
+    iid_global[3].append(num_incr_decr(alt_seq1(conv1(a))))
+    print("num increase and decrease test:", iid_global[3][-1])
 
-    list_global[4].append(num_direct_run(alt_seq2(a, 0.5)))
-    print("num directional run test2:", list_global[4][-1])
+    iid_global[4].append(num_direct_run(alt_seq2(a, 0.5)))
+    print("num directional run test2:", iid_global[4][-1])
     
-    list_global[5].append(len_direct_run(alt_seq2(a, 0.5)))
-    print("len directional run test2:", list_global[5][-1])
+    iid_global[5].append(len_direct_run(alt_seq2(a, 0.5)))
+    print("len directional run test2:", iid_global[5][-1])
 
-    list_global[6].append(avg_col(conv2(a)))
-    print("average collision test:", list_global[6][-1])
+    iid_global[6].append(avg_col(conv2(a)))
+    print("average collision test:", iid_global[6][-1])
 
-    list_global[7].append(max_col(conv2(a)))
-    print("max collision test:", list_global[7][-1])
+    iid_global[7].append(max_col(conv2(a)))
+    print("max collision test:", iid_global[7][-1])
 
-    list_global[8].append(period_test(conv1(a)))
-    print("periodic test (1, 2, 8, 16, 32):", list_global[8][-1])
+    iid_global[8].append(period_test(conv1(a)))
+    print("periodic test (1, 2, 8, 16, 32):", iid_global[8][-1])
 
-    list_global[9].append(covar_test(conv1(a)))
-    print("covar test (1, 2, 8, 16, 32):", list_global[9][-1])
+    iid_global[9].append(covar_test(conv1(a)))
+    print("covar test (1, 2, 8, 16, 32):", iid_global[9][-1])
 
-    list_global[10].append(compress_test(a))
-    print("compress test:", list_global[10][-1])
+    iid_global[10].append(compress_test(a))
+    print("compress test:", iid_global[10][-1])
 
-    list_global[11].append(chisq_independ(a))
-    print("chi square independ test:", list_global[11][-1])
+    iid_global[11].append(chisq_independ(a))
+    print("chi square independ test:", iid_global[11][-1])
 
-    list_global[12].append(chisq_goodness(a))
-    print("chi square goodness test:", list_global[12][-1])
+    iid_global[12].append(chisq_goodness(a))
+    print("chi square goodness test:", iid_global[12][-1])
 
-    list_global[13].append(chisq_LRS(a))
-    print("chi square LRS test:", list_global[13][-1])
+    iid_global[13].append(chisq_LRS(a))
+    print("chi square LRS test:", iid_global[13][-1])
 
-    list_global[14].append(estimator_common_value(a))
-    print("estimator common value:", list_global[14][-1])
+    iid_global[14].append(estimator_common_value(a))
+    print("estimator common value:", iid_global[14][-1])
 
-    list_global[15].append(estimator_collision(a))
-    print("estimator collision:", list_global[15][-1])
+    iid_global[15].append(estimator_collision(a))
+    print("estimator collision:", iid_global[15][-1])
 
-    list_global[16].append(estimator_markov(a))
-    print("estimator markov:", list_global[16][-1])
+    iid_global[16].append(estimator_markov(a))
+    print("estimator markov:", iid_global[16][-1])
 
 def unit_test():
     print("===Unit Test===")
@@ -675,7 +680,8 @@ def perm_test(func, a, xform = 0):
 
 #plot_scc()
 
-infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf78_cold_hot.txt', 'puf90.txt']
+infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf90.txt']
+#infiles = ['puf78_room_cold.txt', 'puf78_room_hot.txt', 'puf78_cold_hot.txt']
 
 process_puf(infiles)
 
@@ -708,6 +714,7 @@ for y in infiles:
         perm_test(chisq_independ, a)
         perm_test(chisq_goodness, a)
         perm_test(chisq_LRS, a)
+        exit(0)
 
     fcount += 1
 
@@ -717,8 +724,8 @@ plot_titles = ['Excursion',
         'Num Dir Run',
         'Length Dir Run',
         'Num Incr/Decr',
-        'Num Dir Run (Med)',
-        'Length Dir Run (Med)',
+        'Num Dir Run (Median)',
+        'Length Dir Run (Median)',
         'Avg Collision',
         'Max Collision',
         'Periodic',
@@ -730,14 +737,32 @@ plot_titles = ['Excursion',
         'Common Val Est',
         'Collision Est',
         'Markov Est']
-plotcount = 0
-for x in range(11):
-    if x+1 in [1,2,3,4,5,6,7,8,11]:
-        ax = plt.subplot(3,3,plotcount+1)
-        ax.title.set_text(plot_titles[x])
-        sns.kdeplot(list_global[x], color='Orange')
-        ax.twinx().hist(list_global[x], color='Blue')
-        plotcount += 1
-plt.legend('', frameon=False)
-plt.show()
+
+def plot_kde(gg, hh, ww, aa, tt):
+    plotcount = 0
+    for x in range(17):
+        if x+1 in aa:
+            ax = plt.subplot(hh,ww,plotcount+1)
+            ax.title.set_text(plot_titles[x])
+            if tt == 1:
+                sns.kdeplot(gg[x], color='Orange')
+                ax.twinx().hist(gg[x], color='Blue')
+            elif tt == 2:
+                gg[x] = np.array(gg[x]).transpose().tolist()
+                sns.kdeplot(gg[x], multiple='stack')
+            plotcount += 1
+    plt.legend('', frameon=False)
+    plt.show()
+
+#plot_kde(iid_global, 3, 3, [1,2,3,4,5,6,7,8,11], 1)
+#plot_kde(iid_global, 2, 1, [9, 10], 2)
+
+def plot_ber(gg):
+    ll = np.reshape(np.array(gg), (-1, 8)).transpose().tolist()
+    df = pd.DataFrame(ll)
+    df.columns = ['Cold vs Room', 'Room vs Hot', 'Cold vs Hot']
+    sns.kdeplot(df, multiple='fill')
+    plt.show()
+
+#plot_ber(ber_global)
 
