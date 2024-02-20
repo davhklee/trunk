@@ -680,8 +680,8 @@ def perm_test(func, a, xform = 0):
 
 #plot_scc()
 
-infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf90.txt']
-#infiles = ['puf78_room_cold.txt', 'puf78_room_hot.txt', 'puf78_cold_hot.txt']
+#infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf90.txt']
+infiles = ['puf78_room_cold.txt', 'puf78_room_hot.txt', 'puf78_cold_hot.txt']
 
 process_puf(infiles)
 
@@ -760,9 +760,47 @@ def plot_kde(gg, hh, ww, aa, tt):
 def plot_ber(gg):
     ll = np.reshape(np.array(gg), (-1, 8)).transpose().tolist()
     df = pd.DataFrame(ll)
-    df.columns = ['Cold vs Room', 'Room vs Hot', 'Cold vs Hot']
+    df.columns = ['Room vs Cold', 'Room vs Hot', 'Cold vs Hot']
     sns.kdeplot(df, multiple='fill')
     plt.show()
 
 #plot_ber(ber_global)
+
+def plot_group(gg):
+    species = ("Room vs Cold", "Room vs Hot", "Cold vs Hot")
+    penguin_means = {
+        'Min': [18.35, 18.43, 14.98],
+        'Max': [38.79, 48.83, 47.50],
+        'Avg': [189.95, 195.82, 217.19],
+    }
+
+    ll = np.reshape(np.array(gg), (-1, 8)).tolist()
+    #print("ll",ll)
+    for x in range(3):
+        penguin_means["Min"][x] = round(np.min(ll[x]) / 1024 * 100, 2)
+        penguin_means["Max"][x] = round(np.max(ll[x]) / 1024 * 100, 2)
+        penguin_means["Avg"][x] = round(np.mean(ll[x]) / 1024 * 100, 2)
+
+    x = np.arange(len(species))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+
+    fig, ax = plt.subplots(layout='constrained')
+
+    for attribute, measurement in penguin_means.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, measurement, width, label=attribute)
+        ax.bar_label(rects, padding=3)
+        multiplier += 1
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('no. BER')
+    ax.set_title('Bit Error Rate at Temperatures (in %)')
+    ax.set_xticks(x + width, species)
+    ax.legend(loc='upper left', ncols=3)
+    ax.set_ylim(0, 9)
+    plt.show()
+
+#plot_group(ber_global)
+
 
