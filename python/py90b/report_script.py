@@ -380,7 +380,7 @@ def chisq_independ(a, isbin = True):
     df = pow(2, m) - 2
     #print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
 
-    return(T)
+    return([T, cvalue[df]])
 
 def chisq_goodness(a, isbin = True):
     assert(isbin)
@@ -408,7 +408,7 @@ def chisq_goodness(a, isbin = True):
     df = 9
     #print("df:", df, "err:", 0.001, "cvalue:", cvalue[df])
 
-    return(T)
+    return([T, cvalue[df]])
 
 def chisq_LRS(a, isbin = True):
     assert(isbin)
@@ -434,7 +434,7 @@ def chisq_LRS(a, isbin = True):
 
     #print("W:", W, "err:", 0.001)
 
-    return(pr)
+    return([pr, 0.001])
 
 def estimator_common_value(a):
     s = set(a)
@@ -753,12 +753,17 @@ def plot_kde(gg, hh, ww, aa, tt):
             elif tt == 2:
                 gg[x] = np.array(gg[x]).transpose().tolist()
                 sns.kdeplot(gg[x], multiple='stack')
+            elif tt == 3:
+                gg[x] = np.array(gg[x]).transpose().tolist()
+                plt.plot(gg[x][0], color='b')
+                plt.plot(gg[x][1], color='g')
             plotcount += 1
     plt.legend('', frameon=False)
     plt.show()
 
 #plot_kde(iid_global, 3, 3, [1,2,3,4,5,6,7,8,11], 1)
 #plot_kde(iid_global, 2, 1, [9, 10], 2)
+plot_kde(iid_global, 1, 3, [12, 13, 14], 3)
 
 def plot_ber(gg):
     ll = np.reshape(np.array(gg), (-1, 8)).transpose().tolist()
@@ -826,6 +831,6 @@ def plot_contour(gg):
         plt.title("Serial Correlation (SCC)")
     plt.show()
 
-plot_contour(scc_global)
+#plot_contour(scc_global)
 
 
