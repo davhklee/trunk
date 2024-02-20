@@ -763,7 +763,7 @@ def plot_kde(gg, hh, ww, aa, tt):
 
 #plot_kde(iid_global, 3, 3, [1,2,3,4,5,6,7,8,11], 1)
 #plot_kde(iid_global, 2, 1, [9, 10], 2)
-plot_kde(iid_global, 1, 3, [12, 13, 14], 3)
+#plot_kde(iid_global, 1, 3, [12, 13, 14], 3)
 
 def plot_ber(gg):
     ll = np.reshape(np.array(gg), (-1, 8)).transpose().tolist()
@@ -832,5 +832,18 @@ def plot_contour(gg):
     plt.show()
 
 #plot_contour(scc_global)
+
+def plot_estimate(gg, aa):
+    for x in range(17):
+        if x+1 in aa:
+            plt.fill_between([k for k in range(len(gg[x]))], gg[x], alpha=0.4, label=plot_titles[x])
+    plt.xlabel("Sample")
+    plt.ylabel("Entropy Rate")
+    plt.title("min-entropy Estimation")
+    plt.legend(loc="upper right")
+    plt.show()
+
+plot_estimate(iid_global, [15, 16, 17])
+
 
 
