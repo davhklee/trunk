@@ -680,10 +680,12 @@ def perm_test(func, a, xform = 0):
 
 #plot_scc()
 
-#infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf90.txt']
-infiles = ['puf78_room_cold.txt', 'puf78_room_hot.txt', 'puf78_cold_hot.txt']
+infiles = ['puf12.txt', 'puf34.txt', 'puf56.txt', 'puf78.txt', 'puf90.txt']
+#infiles = ['puf78_room_cold.txt', 'puf78_room_hot.txt', 'puf78_cold_hot.txt']
 
 process_puf(infiles)
+
+scc_global = []
 
 fcount = 0
 for y in infiles:
@@ -693,6 +695,7 @@ for y in infiles:
         k11 = count11(fn)
         s = scc(1024, k1, k11)
         print("bias:", k1, "count11:", k11, "scc:", s)
+        scc_global.append([k1, k11, s])
         assert(abs(s) < 0.4)
 
         a = bit_array(fn)
@@ -802,5 +805,27 @@ def plot_group(gg):
     plt.show()
 
 #plot_group(ber_global)
+
+def plot_contour(gg):
+    ll = np.array(gg).transpose().tolist()
+    # set seaborn style
+    sns.set_style("white")
+    # Custom the color, add shade and bandwidth
+    for x in range(4):
+        ax = plt.subplot(2, 2, x + 1)
+        if x == 0:
+            sns.kdeplot(x=ll[0], y=ll[1], cmap="Reds", shade=True, bw_adjust=.5, thresh=0)
+        elif x == 1:
+            sns.kdeplot(x=ll[0], y=ll[1], cmap="Greens", shade=True, bw_adjust=.5, thresh=0)
+        elif x == 2:
+            sns.kdeplot(x=ll[0], y=ll[1], cmap="Blues", shade=True, bw_adjust=.5, thresh=0)
+        else:
+            sns.kdeplot(x=ll[0], y=ll[1], bw_adjust=.5, thresh=0)
+        plt.xlabel("k1")
+        plt.ylabel("k11")
+        plt.title("Serial Correlation (SCC)")
+    plt.show()
+
+plot_contour(scc_global)
 
 
