@@ -1,0 +1,10 @@
+*.html linguist-detectable=false
+*.js linguist-detectable=false
+*.java linguist-detectable=false
+*.html linguist-detectable=false
+*.xml linguist-detectable=false
+*.css linguist-detectable=false
+* linguist-vendored
+*.c linguist-vendored=false
+*.cpp linguist-vendored=false
+
