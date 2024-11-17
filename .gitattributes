@@ -1,0 +1,9 @@
+*.html linguist-generated
+*.xml linguist-generated
+*.css linguist-generated
+*.c linguist-detectable
+*.cpp linguist-detectable
+*.py linguist-detectable
+*.js linguist-detectable
+*.java linguist-detectable
+
