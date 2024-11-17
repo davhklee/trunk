@@ -1,6 +1,10 @@
 *.html linguist-generated
 *.xml linguist-generated
 *.css linguist-generated
+text.html.handlebars linguist-generated
+*.handlebars linguist-generated
+*.hbs linguist-generated
+
 *.c linguist-detectable
 *.cpp linguist-detectable
 *.py linguist-detectable
