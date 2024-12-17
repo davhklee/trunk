@@ -82,7 +82,7 @@ df_test["text"] = df_test["text"].apply(lambda x: get_clean(x))
 df_train.head()
 df_test.head()
 
-#example with DistilBERT model
+#training with DistilBERT model
 BATCH_SIZE = 32
 NUM_TRAINING_EXAMPLES = df_train.shape[0]
 TRAIN_SPLIT = 0.8
@@ -108,3 +108,68 @@ classifier.summary()
 classifier.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
 
 history = classifier.fit(x = X_train, y = y_train, batch_size = BATCH_SIZE, epochs = EPOCHS, validation_data = (X_val, y_val))
+
+#inference with DistilBERT model
+y_pred_train = classifier.predict(X_train)
+
+#f1-score with DistilBERT model
+print(y_pred_train)
+
+#training with CNN model
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Embedding, Dropout
+from tensorflow.keras.layers import Conv1D, MaxPooling1D, GlobalMaxPooling1D
+
+#tokenize text
+text = df_train["text"]
+token = Tokenizer()
+token.fit_on_texts(text)
+vocab_size = len(token.word_index) + 1
+encoded_text = token.texts_to_sequences(text) #turn words into indexed tokens
+print("encoded_text:", encoded_text)
+max_length = 40
+X = pad_sequences(encoded_text, maxlen=max_length, padding="post")
+print("X:", X)
+y = df_train["target"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0, stratify=y)
+
+#construct CNN network
+vec_size = 100
+model = Sequential()
+model.add(Embedding(vocab_size, vec_size, input_length=max_length))
+
+model.add(Conv1D(32, 1, activation="relu"))
+model.add(MaxPooling1D(2))
+model.add(Dropout(0.5))
+
+model.add(Dense(32, activation="relu"))
+model.add(Dropout(0.5))
+
+model.add(Dense(16, activation="relu"))
+
+model.add(GlobalMaxPooling1D())
+
+model.add(Dense(1, activation="sigmoid"))
+
+model.summary()
+
+#fitting the model
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+model.fit(X_train, y_train, epochs=5, validation_data=(X_test, y_test))
+
+#inference with CNN model
+def get_encoded(x):
+  x = get_clean(x)
+  x = token.texts_to_sequences([x])
+  x = pad_sequences(x, maxlen=max_length, padding="post")
+  return x
+
+y_pred_test = model.predict(X_test)
+y_pred_test = y_pred_test > 0.4
+X_val = get_encoded(X_test)
+print("y_pred_test:", y_pred_test)
+print("y_test:", y_test)
+
+#f1-score with CNN model
