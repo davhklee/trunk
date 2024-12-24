@@ -7,7 +7,7 @@ import time
 from datetime import datetime, timedelta
 
 def random_date2(start, end, time_format = "%m/%d/%Y %I:%M %p"):
-    random.seed(datetime.now())
+    random.seed(datetime.now().timestamp())
     prop = random.random()
     stime = time.mktime(time.strptime(start, time_format))
     etime = time.mktime(time.strptime(end, time_format))
@@ -15,7 +15,7 @@ def random_date2(start, end, time_format = "%m/%d/%Y %I:%M %p"):
     return time.strftime(time_format, time.localtime(ptime))
 
 def random_date(start, end, time_format = "%m/%d/%Y %I:%M %p"):
-    random.seed(datetime.now())
+    random.seed(datetime.now().timestamp())
     sdate = datetime.strptime(start, time_format)
     edate = datetime.strptime(end, time_format)
     rday = math.floor((edate - sdate).days * random.random())
