@@ -5,6 +5,7 @@ import random
 import math
 import time
 from datetime import datetime, timedelta
+import glob
 
 def random_date2(start, end, time_format = "%m/%d/%Y %I:%M %p"):
     random.seed(datetime.now().timestamp())
@@ -23,6 +24,10 @@ def random_date(start, end, time_format = "%m/%d/%Y %I:%M %p"):
     rmin = math.floor(60 * random.random())
     return str(sdate + timedelta(days = rday, hours=rhour, minutes=rmin))
 
+#current folder
+listing = glob.glob("./*trunk")
+print(listing)
+
 test_list = ["git"]
 
 fp = open("comments.txt","r")
@@ -40,7 +45,7 @@ for r, subfolder, files in os.walk("backup"):
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy(src, dst)
             os.system("cd trunk;git add --all")
-            dat = random_date("1/1/2007 9:00 AM", "12/20/2025 5:00 PM")
+            dat = random_date("1/1/2007 9:00 AM", "12/31/2025 5:00 PM")
             print(dat)
             os.system("cd trunk;git commit --date='" + dat + "' -m '" + msg_list[math.floor(random.random() * len(msg_list))] + "'")
 
